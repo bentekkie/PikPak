@@ -54,21 +54,15 @@ Storage for raw images to be served
 
 ### Creating the UI design - Feb 3rd
 - drawing a mock-up of the website
-
 ### Implementing the UI - Feb 9th
 - creating the front-end
-
 ### Implementing the API's - Feb 9th
 - getting back-end and API's to work
-
 ### Combining both front-end and back-end - Feb 16th
 - getting front-end and back-end to work together
-
 ### Revision - Feb 23rd
 - fixing things that don't work
-
 ### First Draft for Presentation - March 16 th
 - prepare for our presentation
-
-Final Draft for Project Files and Documents - March 30th
+### Final Draft for Project Files and Documents - March 30th
 - fix up and finalize our project
