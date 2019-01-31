@@ -32,6 +32,7 @@ Sorts photos based on user preferred tags.
 Users who uploaded the content are remained anonymous.
 ### Camera
 Allows users to take pictures on their phone and upload it to the feed. Users can tag the photos and save it to their phone.
+## APIs
 ### User Settings
 Allows authenticated users to modify and retrieve settings
 ### Authentication
