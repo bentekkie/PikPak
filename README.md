@@ -32,6 +32,19 @@ Sorts photos based on user preferred tags.
 Users who uploaded the content are remained anonymous.
 ### Camera
 Allows users to take pictures on their phone and upload it to the feed. Users can tag the photos and save it to their phone.
-
+### User Settings
+Allows authenticated users to modify and retrieve settings
+### Authentication
+Authenticates users
+### Feed
+Returns images for a given search query and user information
+### Upload Photos
+Allows authenticated users to upload photos with tags. Checks for NSFW content
+### Users
+Database to store users and settings
+### PhotoIDs
+Database of all photos currently stored with tags and location data
+## Photo Storage
+Storage for raw images to be served
 ## Flowchart
 ![flowchart](PikPak.png)
