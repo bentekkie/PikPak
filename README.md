@@ -17,4 +17,4 @@ Low, Can opperate phone camera, Can opperate web browser
 
 
 ## Flowchart
-![PikPak.png]
+![flowchart](PikPak.png)
