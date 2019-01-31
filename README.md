@@ -14,3 +14,7 @@ Teens, Young Adults
 Photographers, Artists, Food, Sight seeing
 ### Technical Abilities
 Low, Can opperate phone camera, Can opperate web browser
+
+
+## Flowchart
+![flowchart][PikPak.png]
