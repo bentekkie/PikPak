@@ -5,6 +5,7 @@
 An app that allows users to take photos and upload them to a shared location based feed.
 Images are deleted after 24 hours
 Users can see photos uploaded by other anonymous users in the last 24 hours on the shared feed.
+All users can see all SFW photos, logged in users can see all photos including NSWF ones if they choose to
 
 ## Target Users
 
@@ -32,7 +33,7 @@ Sorts photos based on user preferred tags.
 Users who uploaded the content are remained anonymous.
 ### Camera
 Allows users to take pictures on their phone and upload it to the feed. Users can tag the photos and save it to their phone.
-## APIs
+## Self implemented APIs
 ### User Settings
 Allows authenticated users to modify and retrieve settings
 ### Authentication
@@ -49,6 +50,39 @@ Database of all photos currently stored with tags and location data
 Storage for raw images to be served
 ## Flowchart
 ![flowchart](PikPak.png)
+
+## External APIs
+
+### NSFW Content Filtering
+We will use [PicPurify](https://www.picpurify.com/index.html) for analyzing images for NSFW content
+
+## UI
+### Libraries Used
+React.js client, written in typescript
+[react](https://reactjs.org/)
+[typescript](https://www.typescriptlang.org/)
+[react-html5-camera-photo](https://www.npmjs.com/package/react-html5-camera-photo)
+[react-infinite](https://github.com/seatgeek/react-infinite)
+[reactstrap](https://reactstrap.github.io)
+
+## Database
+Use (MySQL)[https://www.mysql.com/] database
+Passwords will salted and hashed before being stored
+
+## Server
+Node.JS Server, written in typescript
+## Libraries Used
+[typescript](https://www.typescriptlang.org/)
+[node.js](https://nodejs.org/en/)
+[express.js](https://expressjs.com/)
+[passort.js](http://www.passportjs.org/)
+- Allows secure cookie-session based authentication
+[sequelizejs](http://docs.sequelizejs.com/)
+- For schema validation when interacting with the database
+[better-queue](https://www.npmjs.com/package/better-queue)
+- To limit concurrency and prevent race conditions
+
+
 
 ## Milestones
 
