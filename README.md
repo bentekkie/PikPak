@@ -59,11 +59,12 @@ We will use [PicPurify](https://www.picpurify.com/index.html) for analyzing imag
 ## UI
 ### Libraries Used
 React.js client, written in typescript
-[react](https://reactjs.org/)
-[typescript](https://www.typescriptlang.org/)
-[react-html5-camera-photo](https://www.npmjs.com/package/react-html5-camera-photo)
-[react-infinite](https://github.com/seatgeek/react-infinite)
-[reactstrap](https://reactstrap.github.io)
+- [react](https://reactjs.org/)
+- [typescript](https://www.typescriptlang.org/)
+- [react-html5-camera-photo](https://www.npmjs.com/package/react-html5-camera-photo)
+- [react-infinite](https://github.com/seatgeek/react-infinite)
+- [reactstrap](https://reactstrap.github.io)
+
 
 ## Database
 Use (MySQL)[https://www.mysql.com/] database
@@ -72,15 +73,15 @@ Passwords will salted and hashed before being stored
 ## Server
 Node.JS Server, written in typescript
 ## Libraries Used
-[typescript](https://www.typescriptlang.org/)
-[node.js](https://nodejs.org/en/)
-[express.js](https://expressjs.com/)
-[passort.js](http://www.passportjs.org/)
-- Allows secure cookie-session based authentication
-[sequelizejs](http://docs.sequelizejs.com/)
-- For schema validation when interacting with the database
-[better-queue](https://www.npmjs.com/package/better-queue)
-- To limit concurrency and prevent race conditions
+- [typescript](https://www.typescriptlang.org/)
+- [node.js](https://nodejs.org/en/)
+- [express.js](https://expressjs.com/)
+- [passort.js](http://www.passportjs.org/)
+  - Allows secure cookie-session based authentication
+- [sequelizejs](http://docs.sequelizejs.com/)
+  - For schema validation when interacting with the database
+- [better-queue](https://www.npmjs.com/package/better-queue)
+  - To limit concurrency and prevent race conditions
 
 
 
