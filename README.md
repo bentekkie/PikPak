@@ -72,7 +72,7 @@ Passwords will salted and hashed before being stored
 
 ## Server
 Node.JS Server, written in typescript
-## Libraries Used
+### Libraries Used
 - [typescript](https://www.typescriptlang.org/)
 - [node.js](https://nodejs.org/en/)
 - [express.js](https://expressjs.com/)
