@@ -1,0 +1,27 @@
+.post {
+}
+
+.postInner {
+    width: 100%;
+    margin: auto;
+    background-color: LightGray;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+
+.postInner  .tag {
+    padding-left: 2px;
+    background: darkgray;
+    padding-right: 2px;
+    border-radius: 2px;
+    margin-left: 2px;
+}
+
+.vote {
+    float:right;
+}
+
+.vote > a {
+    cursor: pointer
+}
