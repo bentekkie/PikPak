@@ -11,8 +11,7 @@ class Settings extends Component<IProps,{}> {
   render() {
     return (
       <Container>
-      
-        <Form>
+        <Form onSubmit={e => e.preventDefault()}>
           <FormGroup row>
             <Col sm="2">
             <Label for="username">Username</Label>
@@ -37,6 +36,7 @@ class Settings extends Component<IProps,{}> {
               <Input name="passwordRepeat" type="password"/>
             </Col>
           </FormGroup>
+          <Input type="submit" value="Update"/>
         </Form>
       </Container>
     );
