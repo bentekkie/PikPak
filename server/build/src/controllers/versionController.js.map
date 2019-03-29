@@ -1,0 +1,1 @@
+{"version":3,"file":"versionController.js","sourceRoot":"","sources":["../../../src/controllers/versionController.ts"],"names":[],"mappings":";;;AAAA,+BAA+D;AAI/D,IAAa,iBAAiB,GAA9B,MAAa,iBAAiB;IAGb,OAAO;;YAChB,OAAO;gBACH,OAAO,EAAC,OAAO;aAClB,CAAA;QACL,CAAC;KAAA;CACJ,CAAA;AALG;IADC,UAAG,EAAE;;;;gDAKL;AAPQ,iBAAiB;IAD7B,YAAK,CAAC,SAAS,CAAC;GACJ,iBAAiB,CAQ7B;AARY,8CAAiB"}

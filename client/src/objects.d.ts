@@ -8,13 +8,12 @@ export interface IUser {
     isHashed: boolean
 }
 
-export interface IPost {
-    id:string
-    authorID: string
-    pictureID: string
-    tags: string[]
-    nsfwTags: NsfwTag[]
-    votes: number
+export interface IPost{
+    id:string,
+    pictureID:string,
+    nsfwTags:string[],
+    tags:string[],
+    votes:number
 }
 
 export interface IUpvoteInfo{

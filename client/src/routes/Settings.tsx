@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Container, Form, Input, FormGroup, Label, Col } from 'reactstrap';
-import { IUser } from '../../../common/objects';
+import { IUserResponse } from '../api/model';
 
 interface IProps {
-  user:IUser
+  user:IUserResponse
 }
 
 

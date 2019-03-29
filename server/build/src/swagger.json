@@ -1,0 +1,376 @@
+{
+    "basePath": "/api",
+    "consumes": [
+        "application/json"
+    ],
+    "definitions": {
+        "ILoginResponse": {
+            "properties": {
+                "authToken": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number",
+                    "format": "double"
+                }
+            },
+            "required": [
+                "authToken",
+                "username",
+                "id"
+            ],
+            "type": "object"
+        },
+        "IErrorResponse": {
+            "properties": {
+                "thrown": {
+                    "type": "boolean",
+                    "x-nullable": true
+                },
+                "error": {
+                    "type": "object",
+                    "x-nullable": true
+                },
+                "message": {
+                    "type": "string",
+                    "x-nullable": true
+                }
+            },
+            "type": "object"
+        },
+        "ILoginParams": {
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "username",
+                "password"
+            ],
+            "type": "object"
+        },
+        "IUserResponse": {
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number",
+                    "format": "double"
+                }
+            },
+            "required": [
+                "username",
+                "id"
+            ],
+            "type": "object"
+        },
+        "INewUserParams": {
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "username",
+                "password"
+            ],
+            "type": "object"
+        },
+        "IPicture": {
+            "properties": {
+                "creationDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ITag"
+                    },
+                    "x-nullable": true
+                }
+            },
+            "required": [
+                "creationDate"
+            ],
+            "type": "object"
+        },
+        "ITag": {
+            "properties": {
+                "value": {
+                    "type": "string"
+                },
+                "pictures": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/IPicture"
+                    },
+                    "x-nullable": true
+                }
+            },
+            "required": [
+                "value"
+            ],
+            "type": "object"
+        },
+        "IFeedResponse": {
+            "properties": {
+                "pictures": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/IPicture"
+                    }
+                },
+                "page": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "pageSize": {
+                    "type": "number",
+                    "format": "double"
+                }
+            },
+            "required": [
+                "pictures",
+                "page",
+                "pageSize"
+            ],
+            "type": "object"
+        },
+        "IFeedRequestBody": {
+            "properties": {
+                "page": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "pageSize": {
+                    "type": "number",
+                    "format": "double"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "x-nullable": true
+                }
+            },
+            "required": [
+                "page",
+                "pageSize"
+            ],
+            "type": "object"
+        },
+        "IImageParams": {
+            "properties": {
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "tags"
+            ],
+            "type": "object"
+        }
+    },
+    "info": {
+        "title": "PikPak-Server",
+        "version": "1.0.0",
+        "license": {
+            "name": "MIT"
+        }
+    },
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "operationId": "Login",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/ILoginResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error Occurred",
+                        "schema": {
+                            "$ref": "#/definitions/IErrorResponse"
+                        }
+                    }
+                },
+                "description": "Login user",
+                "tags": [
+                    "Auth"
+                ],
+                "security": [],
+                "parameters": [
+                    {
+                        "description": "Parameters to login",
+                        "in": "body",
+                        "name": "loginParams",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ILoginParams"
+                        }
+                    }
+                ]
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "operationId": "RegisterUser",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/IUserResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error occurred",
+                        "schema": {
+                            "$ref": "#/definitions/IErrorResponse"
+                        }
+                    }
+                },
+                "description": "Register new user",
+                "tags": [
+                    "Auth"
+                ],
+                "security": [],
+                "parameters": [
+                    {
+                        "description": "Parameters to register new user",
+                        "in": "body",
+                        "name": "requestBody",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/INewUserParams"
+                        }
+                    }
+                ]
+            }
+        },
+        "/feed": {
+            "post": {
+                "operationId": "Search",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/IFeedResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/IFeedRequestBody"
+                        }
+                    }
+                ]
+            }
+        },
+        "/version": {
+            "get": {
+                "operationId": "Version",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [],
+                "parameters": []
+            }
+        },
+        "/image/uploadFile": {
+            "post": {
+                "operationId": "UploadFile",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "imageFile",
+                        "required": true,
+                        "type": "file"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "tags",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ]
+            }
+        }
+    },
+    "produces": [
+        "application/json"
+    ],
+    "swagger": "2.0",
+    "securityDefinitions": {
+        "JWT": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
