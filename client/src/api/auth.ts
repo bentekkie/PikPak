@@ -12,6 +12,7 @@ export async function login(username: string, password: string){
         console.log(resp.authToken)
         return getCurrentUser()
     }else{
+        alert ("Invalid username/password")
         throw Error("invalid username/password")
     }
 }

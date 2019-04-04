@@ -78,7 +78,7 @@ class Feed extends Component<{},IState> {
   <div className="post">
     <div className="postInner">
       <LazyLoad offset={this.height*2}>
-        <img className="col-12" src={`/api/image/imageFile/${props.post.id}.jpeg`}/>
+        <img className="col-12 p-2" src={`/api/image/imageFile/${props.post.id}.jpeg`}/>
       </LazyLoad>
       <div>
         {(props.post.tags)?props.post.tags.map(tag => <a key={tag} href="#" className="tag">#{tag}</a>):[]}
