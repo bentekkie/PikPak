@@ -9,6 +9,7 @@ export interface IPicture {
     creationDate: Date;
     tags?: ITag[];
     votes: IVote[]
+    data: Buffer
 }
 
 @Table
@@ -21,4 +22,7 @@ export default class Picture extends Model<Picture> implements IPicture {
 
     @HasMany(() => Vote)
     votes: Vote[]
+
+    @Column
+    data: Buffer
 }

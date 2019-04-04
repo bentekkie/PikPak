@@ -40,12 +40,36 @@ const models: TsoaRoute.Models = {
             "password": { "dataType": "string", "required": true },
         },
     },
+    "IPost": {
+        "properties": {
+            "id": { "dataType": "string", "required": true },
+            "pictureID": { "dataType": "string", "required": true },
+            "nsfwTags": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+            "tags": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+            "votes": { "dataType": "double", "required": true },
+        },
+    },
+    "IFeedResponse": {
+        "properties": {
+            "pictures": { "dataType": "array", "array": { "ref": "IPost" }, "required": true },
+            "page": { "dataType": "double", "required": true },
+            "pageSize": { "dataType": "double", "required": true },
+        },
+    },
+    "IFeedRequestBody": {
+        "properties": {
+            "page": { "dataType": "double", "required": true },
+            "pageSize": { "dataType": "double", "required": true },
+            "tags": { "dataType": "array", "array": { "dataType": "string" } },
+        },
+    },
     "IPicture": {
         "properties": {
             "id": { "dataType": "double" },
             "creationDate": { "dataType": "datetime", "required": true },
             "tags": { "dataType": "array", "array": { "ref": "ITag" } },
             "votes": { "dataType": "array", "array": { "ref": "IVote" }, "required": true },
+            "data": { "dataType": "buffer", "required": true },
         },
     },
     "ITag": {
@@ -53,13 +77,6 @@ const models: TsoaRoute.Models = {
             "_id": { "dataType": "double" },
             "value": { "dataType": "string", "required": true },
             "pictures": { "dataType": "array", "array": { "ref": "IPicture" } },
-        },
-    },
-    "IUser": {
-        "properties": {
-            "username": { "dataType": "string", "required": true },
-            "password": { "dataType": "string" },
-            "id": { "dataType": "double" },
         },
     },
     "IVote": {
@@ -73,18 +90,11 @@ const models: TsoaRoute.Models = {
             "userId": { "dataType": "double", "required": true },
         },
     },
-    "IFeedResponse": {
+    "IUser": {
         "properties": {
-            "pictures": { "dataType": "array", "array": { "ref": "IPicture" }, "required": true },
-            "page": { "dataType": "double", "required": true },
-            "pageSize": { "dataType": "double", "required": true },
-        },
-    },
-    "IFeedRequestBody": {
-        "properties": {
-            "page": { "dataType": "double", "required": true },
-            "pageSize": { "dataType": "double", "required": true },
-            "tags": { "dataType": "array", "array": { "dataType": "string" } },
+            "username": { "dataType": "string", "required": true },
+            "password": { "dataType": "string" },
+            "id": { "dataType": "double" },
         },
     },
     "IImageParams": {
@@ -191,6 +201,26 @@ export function RegisterRoutes(app: express.Express) {
             const promise = controller.version.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
+    app.get('/api/image/imageFile/:fileId.jpeg',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                fileId: { "in": "path", "name": "fileId", "required": true, "dataType": "string" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ImageController();
+
+
+            const promise = controller.getAttachment.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
     app.get('/api/image/vote',
         authenticateMiddleware([{ "JWT": [] }]),
         function(request: any, response: any, next: any) {
@@ -237,8 +267,8 @@ export function RegisterRoutes(app: express.Express) {
         authenticateMiddleware([{ "JWT": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
-                undefined: { "in": "body", "required": true, "ref": "IImageParams" },
                 request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                undefined: { "in": "body", "required": true, "ref": "IImageParams" },
             };
 
             let validatedArgs: any[] = [];

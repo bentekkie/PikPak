@@ -17,6 +17,9 @@ export class FeedController {
             include: [{
                 model: Vote,
                 attributes:['value']
+            },
+            {
+                model: Tag
             }],
             offset: page * pageSize,
             limit: pageSize,
@@ -41,7 +44,13 @@ export class FeedController {
             order: [['creationDate', 'DESC']],
         }));
         return {
-            pictures: pictures,
+            pictures: pictures.map(p => ({
+                    id:`${p.id}`,
+                    pictureID:`img${p.id}`,
+                    votes:(p.votes)?p.votes.map(v => v.value as number).reduce((a,b) => a+b,0):0,
+                    nsfwTags:[],
+                    tags:(p.tags)?p.tags.map(t => t.value):[]
+            })),
             page,
             pageSize
         }

@@ -3,12 +3,10 @@ import * as express from 'express'
 import * as path from "path";
 import * as http from "http";
 import * as passport from "passport"
-import { FeedRouter } from './api';
 import { RegisterRoutes } from './routes';
 import {authenticateUser} from './middleware/authentication'
 import {Sequelize} from 'sequelize-typescript';
 import * as swaggerUi from 'swagger-ui-express';
-import * as swaggerDocument from './swagger.json';
 import './controllers/authController'
 import './controllers/feedController'
 import './controllers/versionController'
@@ -18,7 +16,6 @@ import * as bodyParser from 'body-parser';
 import * as multer from 'multer';
 import {getSwaggerJson} from './generatesw'
 import * as tsconfig from '../tsconfig.json'
-import * as tsoa from '../tsoa.json'
 import { src, client, serverDir } from './pathUtil';
 class Server {
     private app = express();
@@ -28,12 +25,12 @@ class Server {
         username: 'root',
         password: '',
         storage: 'db.sqlite',
-        modelPaths: [path.join(src,'models','tables')]
+        modelPaths: [path.join(src,'models','tables')],
+        logging:false
     });
     constructor() {
         this.sequelize.sync().then(() => getSwaggerJson(tsconfig as any)).then((swagger) => {
             authenticateUser(passport);
-            //console.log(swagger)
             this.app.use(bodyParser.json());
             this.app.use(bodyParser.urlencoded({
                 extended: true,
@@ -46,7 +43,6 @@ class Server {
             this.app.use(passport.session());
             this.app.set('port', process.env.PORT || 3000);
             this.app.use("/static", express.static(path.join(client, 'build', 'static')));
-            this.app.use('/images',express.static(path.join(serverDir,'images')))
             console.log(path.join(serverDir,'images'))
             this.app.use('/browse-api',swaggerUi.serve, swaggerUi.setup(swagger))
             RegisterRoutes(this.app);

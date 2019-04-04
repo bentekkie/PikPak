@@ -1,45 +1,25 @@
-import { IPost, IUpvoteInfo } from "../objects";
-import { IFeedRequestBody, IFeedResponse, IPicture, IVote } from "./model";
+import { IUpvoteInfo } from "../objects";
+import { IFeedRequestBody, IFeedResponse, IPicture, IVote, IPost } from "./model";
 import { postData, fetchData, postForm } from "./utils";
 
 
-export async function getPosts(page : number, pageSize: number) : Promise<[IPost[],boolean]>{
-    let resp : IFeedResponse = await postData('/api/feed',{
+export async function getPosts(page : number, pageSize: number) : Promise<{
+    newPosts:IPost[],
+    hasMore:boolean
+}>{
+    return postData('/api/feed',{
         page,
         pageSize,
-    } as IFeedRequestBody)
-    if(resp.pictures.length === 0){
-        return [[],false]
-    }
-    let p : IPost[] = resp.pictures.map(p => ({
-        id:`${p.id}`,
-        pictureID:`img${p.id}`,
-        votes:(p.votes)?p.votes.map(v => v.value as number).reduce((a,b) => a+b,0):0,
-        nsfwTags:[],
-        tags:(p.tags)?p.tags.map(t => t.value):[]
-    }))
-    return [p,true]
+    } as IFeedRequestBody).then((resp : IFeedResponse) => ({newPosts:resp.pictures,hasMore:resp.pictures.length === 0}))
 }
 
     
 export async function upvote(postID:string) : Promise<IPost>{
-    return fetchData(`/api/image/vote?id=${postID}&up=true`).then((p : IPicture) => ({
-            id:`${p.id}`,
-            pictureID:`img${p.id}`,
-            votes:(p.votes)?p.votes.map(v => v.value as number).reduce((a,b) => a+b,0):0,
-            nsfwTags:[],
-            tags:(p.tags)?p.tags.map(t => t.value):[]
-        }))
+    return fetchData(`/api/image/vote?id=${postID}&up=true`)
 }
 
 export async function downvote(postID:string) : Promise<IPost>{
-    return fetchData(`/api/image/vote?id=${postID}&up=false`).then((p : IPicture) => ({
-        id:`${p.id}`,
-        pictureID:`img${p.id}`,
-        votes:(p.votes)?p.votes.map(v => v.value as number).reduce((a,b) => a+b,0):0,
-        nsfwTags:[],
-        tags:(p.tags)?p.tags.map(t => t.value):[]
-    }))
+    return fetchData(`/api/image/vote?id=${postID}&up=false`)
 }
 
 export async function getUpvoteInfo() : Promise<IUpvoteInfo>{
@@ -53,6 +33,7 @@ export async function uploadImage(file : string | Blob, tags : string[]){
     const data = new FormData()
 
     data.append('imageFile',file)
+    data.append('tags','~empty~')
     for(const tag of tags){
         data.append('tags',tag)
     }

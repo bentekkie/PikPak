@@ -87,6 +87,88 @@
 			],
 			"type": "object"
 		},
+		"IPost": {
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"pictureID": {
+					"type": "string"
+				},
+				"nsfwTags": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"tags": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"votes": {
+					"type": "number",
+					"format": "double"
+				}
+			},
+			"required": [
+				"id",
+				"pictureID",
+				"nsfwTags",
+				"tags",
+				"votes"
+			],
+			"type": "object"
+		},
+		"IFeedResponse": {
+			"properties": {
+				"pictures": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/IPost"
+					}
+				},
+				"page": {
+					"type": "number",
+					"format": "double"
+				},
+				"pageSize": {
+					"type": "number",
+					"format": "double"
+				}
+			},
+			"required": [
+				"pictures",
+				"page",
+				"pageSize"
+			],
+			"type": "object"
+		},
+		"IFeedRequestBody": {
+			"properties": {
+				"page": {
+					"type": "number",
+					"format": "double"
+				},
+				"pageSize": {
+					"type": "number",
+					"format": "double"
+				},
+				"tags": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"page",
+				"pageSize"
+			],
+			"type": "object"
+		},
 		"IPicture": {
 			"properties": {
 				"id": {
@@ -110,11 +192,16 @@
 					"items": {
 						"$ref": "#/definitions/IVote"
 					}
+				},
+				"data": {
+					"type": "string",
+					"format": "byte"
 				}
 			},
 			"required": [
 				"creationDate",
-				"votes"
+				"votes",
+				"data"
 			],
 			"type": "object"
 		},
@@ -138,26 +225,6 @@
 			},
 			"required": [
 				"value"
-			],
-			"type": "object"
-		},
-		"IUser": {
-			"properties": {
-				"username": {
-					"type": "string"
-				},
-				"password": {
-					"type": "string",
-					"x-nullable": true
-				},
-				"_id": {
-					"type": "number",
-					"format": "double",
-					"x-nullable": true
-				}
-			},
-			"required": [
-				"username"
 			],
 			"type": "object"
 		},
@@ -200,51 +267,23 @@
 			],
 			"type": "object"
 		},
-		"IFeedResponse": {
+		"IUser": {
 			"properties": {
-				"pictures": {
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/IPicture"
-					}
+				"username": {
+					"type": "string"
 				},
-				"page": {
-					"type": "number",
-					"format": "double"
+				"password": {
+					"type": "string",
+					"x-nullable": true
 				},
-				"pageSize": {
+				"id": {
 					"type": "number",
-					"format": "double"
-				}
-			},
-			"required": [
-				"pictures",
-				"page",
-				"pageSize"
-			],
-			"type": "object"
-		},
-		"IFeedRequestBody": {
-			"properties": {
-				"page": {
-					"type": "number",
-					"format": "double"
-				},
-				"pageSize": {
-					"type": "number",
-					"format": "double"
-				},
-				"tags": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					},
+					"format": "double",
 					"x-nullable": true
 				}
 			},
 			"required": [
-				"page",
-				"pageSize"
+				"username"
 			],
 			"type": "object"
 		},
@@ -422,6 +461,31 @@
 				"parameters": []
 			}
 		},
+		"/image/imageFile/{fileId}.jpeg": {
+			"get": {
+				"operationId": "GetAttachment",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "object"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "fileId",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
 		"/image/vote": {
 			"get": {
 				"operationId": "Vote",
@@ -432,7 +496,7 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "object"
+							"$ref": "#/definitions/IPost"
 						}
 					}
 				},
@@ -493,7 +557,7 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "object"
+							"$ref": "#/definitions/IPost"
 						}
 					}
 				},

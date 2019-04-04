@@ -20,7 +20,6 @@ export const authenticateUser = (passport: PassportStatic) => {
 };
 
 export async function expressAuthentication(request: express.Request, securityName: string, scopes?: string[]) {
-    console.log(securityName)
     if (securityName === 'JWT') {
         let token = request.body.token || request.query.token || request.headers['authorization'];
         if (token === undefined) {
@@ -28,7 +27,6 @@ export async function expressAuthentication(request: express.Request, securityNa
         }
         token = token.split(' ')[1]
         return new Promise((resolve,reject) => jwt.verify(token, auth.jwt_secret, async (err: any, decoded: any) => {
-            console.log('a')
             if (err) {
                 reject(err)
             } else {
@@ -37,7 +35,6 @@ export async function expressAuthentication(request: express.Request, securityNa
                     reject(new Error("Invalid User"));
                 }
                 else {
-                    console.log(decoded);
                     resolve(decoded);
                 }
             }

@@ -1,1 +1,0 @@
-export {FeedRouter} from "./feed";

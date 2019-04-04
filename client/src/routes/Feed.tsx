@@ -1,12 +1,13 @@
 import React, { Component, ComponentType, StatelessComponent } from 'react';
 import './Feed.css'
-import {IPost, IUpvoteInfo} from '../objects'
+import {IUpvoteInfo, IUser} from '../objects'
 import InfiniteScroll  from 'react-infinite-scroll-component';
 import { getPosts, getUpvoteInfo, upvote, downvote } from '../api/feed';
 import LazyLoad from 'react-lazyload';
 import { Row, Col } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
+import { IPost } from '../api/model';
 interface IState {
     posts : IPost[],
     upvoteInfo: IUpvoteInfo,
@@ -14,7 +15,6 @@ interface IState {
     page : number,
     pageSize : number
 }
-
 
 const InfiniteScrollFix : React.ComponentType<InfiniteScroll.InfiniteScrollProps & {className?:string}> = InfiniteScroll as any
 
@@ -36,7 +36,7 @@ class Feed extends Component<{},IState> {
   }
   
   next(){
-    getPosts(this.state.page,this.state.pageSize).then(([newPosts,hasMore]) => {
+    getPosts(this.state.page,this.state.pageSize).then(({hasMore,newPosts}) => {
       const newLength = this.state.posts.length + newPosts.length
       this.setState(({posts,page}) => ({posts:[...posts,...newPosts],hasMore,page:page+1}))
       if(newLength*this.height < window.innerHeight && hasMore){
@@ -53,7 +53,6 @@ class Feed extends Component<{},IState> {
     getUpvoteInfo().then(upvoteInfo => this.setState({upvoteInfo}))
   }
   
-  
 
   render() {
     return (
@@ -67,9 +66,9 @@ class Feed extends Component<{},IState> {
         className={"container"}
         endMessage={<h4>All done.</h4>}
       >
-        {this.state.posts.map(post => <Row key={post.id}>
+        {this.state.posts.map(post => <Row key={`row${post.id}`}>
         <Col xs="12" lg={{size:"6",offset:"3"}}>
-          <this.Post post={post}/>
+          <this.Post post={post} key={`post${post.id}`}/>
         </Col>
         </Row>)}
       </InfiniteScrollFix>
@@ -79,10 +78,10 @@ class Feed extends Component<{},IState> {
   <div className="post">
     <div className="postInner">
       <LazyLoad offset={this.height*2}>
-        <img className="col-12" src={`/images/${props.post.pictureID}.jpeg`}/>
+        <img className="col-12" src={`/api/image/imageFile/${props.post.id}.jpeg`}/>
       </LazyLoad>
       <div>
-        {props.post.tags.map(tag => <a key={tag} href="#" className="tag">#{tag}</a>)}
+        {(props.post.tags)?props.post.tags.map(tag => <a key={tag} href="#" className="tag">#{tag}</a>):[]}
         <div className="vote">
           <a onClick={() => upvote(props.post.id).then(post => this.setState(({posts}) => {
             const i = posts.findIndex(({id}) => id === post.id)
@@ -94,6 +93,7 @@ class Feed extends Component<{},IState> {
               icon={faCaretUp} 
               style={{color:(this.state.upvoteInfo.upvotes.find(id => id === props.post.id))?"green":"black"}}/>
           </a>
+          {props.post.votes}
           <a onClick={() => downvote(props.post.id).then(post => this.setState(({posts}) => {
             const i = posts.findIndex(({id}) => id === post.id)
             posts[i] = post

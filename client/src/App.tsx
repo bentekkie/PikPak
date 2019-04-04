@@ -114,9 +114,11 @@ class App extends Component<{}, IState> {
   
   render() {
     return (
-      <Router>
+      <Router
+        forceRefresh={true}
+      >
         <div className="App">
-          <Navbar color="light" light expand="xs" fixed="top">
+          <Navbar color="light" light expand="xs" sticky="top">
             <NavbarBrand tag={Link} to="/" className="mr-auto">PikPak</NavbarBrand>
             <Nav navbar >
 
@@ -129,13 +131,13 @@ class App extends Component<{}, IState> {
               </NavItem>,
               ]
                 : [
-                  <NavItem>
+                  <NavItem key="n1">
                     <NavLink href="#" onClick={this.handleLogout}>Logout</NavLink>
                   </NavItem>,
-                  <NavItem>
+                  <NavItem key="n2">
                   <NavLink tag={Link} to="/settings"><FontAwesomeIcon icon={faCog} /></NavLink>
                 </NavItem>,
-                  <NavItem>
+                  <NavItem key="n3">
                   <NavLink tag={Link} to="/camera"><FontAwesomeIcon icon={faCamera} /></NavLink>
                 </NavItem>
                 ]}
@@ -147,7 +149,7 @@ class App extends Component<{}, IState> {
                 : []}
             </Nav>
           </Navbar>
-          <Route path="/" exact component={Feed} />
+          <Route path="/" exact render={(props) => <Feed {...props} key={(this.state.user)?`user${this.state.user.id}feed`:'loggedoutfeed'} />}/>
           {(this.state.user) ? <Route path="/settings/" render={(props) => <Settings {...props} user={this.state.user as IUserResponse} />} /> : []}
           {(this.state.user) ? <Route path="/camera/" component={Camera} /> : []}
 
