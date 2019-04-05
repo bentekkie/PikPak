@@ -10,7 +10,7 @@ interface IProps {
 class Settings extends Component<IProps,{}> {
   render() {
     return (
-      <Container>
+      <Container className="mt-5">
         <Form onSubmit={e => e.preventDefault()}>
           <FormGroup row>
             <Col sm="2">

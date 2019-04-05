@@ -144,7 +144,7 @@ class App extends Component<{}, IState> {
               
               {(this.state.user) ?
                 <NavItem>
-                  {this.state.user.username}
+                  <div className="mt-2 pl-1">{this.state.user.username}</div>
                 </NavItem>
                 : []}
             </Nav>
@@ -158,7 +158,7 @@ class App extends Component<{}, IState> {
             <ModalBody>
               <Form>
                 <Input name="loginusername" type="text" placeholder="username" onChange={this.handleChangeUsernameLogin} value={this.state.loginusername} />
-                <Input name="loginpassword" type="password" placeholder="password" onChange={this.handleChangePasswordLogin} value={this.state.loginpassword} />
+                <Input name="loginpassword" className="mt-3" type="password" placeholder="password" onChange={this.handleChangePasswordLogin} value={this.state.loginpassword} />
               </Form>
             </ModalBody>
             <ModalFooter>
@@ -172,8 +172,8 @@ class App extends Component<{}, IState> {
             <ModalBody>
               <Form>
                 <Input name="registerusername" type="text" placeholder="username" onChange={this.handleChangeUsernameRegister} value={this.state.registerusername} />
-                <Input name="registerpassword" type="password" placeholder="password" onChange={this.handleChangePasswordRegister} value={this.state.registerpassword} />
-                <Input name="registerpasswordconf" type="password" placeholder="repeat password" onChange={this.handleChangePasswordConfirmRegister} value={this.state.registerpasswordconf} />
+                <Input name="registerpassword" className="mt-3" type="password" placeholder="password" onChange={this.handleChangePasswordRegister} value={this.state.registerpassword} />
+                <Input name="registerpasswordconf" className="mt-3" type="password" placeholder="repeat password" onChange={this.handleChangePasswordConfirmRegister} value={this.state.registerpasswordconf} />
               </Form>
             </ModalBody>
             <ModalFooter>

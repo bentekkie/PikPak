@@ -1,16 +1,16 @@
-
 .postInner {
     width: 100%;
     margin: auto;
-    background-color: LightGray;
+    background-color: whitesmoke;
     border-radius: 5px;
     padding: 5px;
+    margin-top: 15px;
 }
 
 
 .postInner  .tag {
     padding-left: 2px;
-    background: darkgray;
+    background: #ccc;
     padding-right: 2px;
     border-radius: 2px;
     margin-left: 2px;
@@ -22,4 +22,8 @@
 
 .vote > a {
     cursor: pointer
+}
+.voteNum{
+    padding: 0px 8px 0px 8px;
+    display: inline-block;
 }

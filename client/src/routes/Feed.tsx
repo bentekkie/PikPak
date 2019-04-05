@@ -82,7 +82,7 @@ class Feed extends Component<{},IState> {
       </LazyLoad>
       <div>
         {(props.post.tags)?props.post.tags.map(tag => <a key={tag} href="#" className="tag">#{tag}</a>):[]}
-        <div className="vote">
+        <div className="vote row mr-2">
           <a onClick={() => upvote(props.post.id).then(post => this.setState(({posts}) => {
             const i = posts.findIndex(({id}) => id === post.id)
             posts[i] = post
@@ -93,7 +93,7 @@ class Feed extends Component<{},IState> {
               icon={faCaretUp} 
               style={{color:(this.state.upvoteInfo.upvotes.find(id => id === props.post.id))?"green":"black"}}/>
           </a>
-          {props.post.votes}
+          <div className="voteNum">{props.post.votes}</div>
           <a onClick={() => downvote(props.post.id).then(post => this.setState(({posts}) => {
             const i = posts.findIndex(({id}) => id === post.id)
             posts[i] = post
