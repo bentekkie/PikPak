@@ -1,19 +1,29 @@
 import React, { Component, ComponentType, StatelessComponent } from 'react';
 import './Feed.css'
+import '../styles/tags.css'
 import {IUpvoteInfo, IUser} from '../objects'
 import InfiniteScroll  from 'react-infinite-scroll-component';
-import { getPosts, getUpvoteInfo, upvote, downvote } from '../api/feed';
+import { getPosts, getUpvoteInfo, upvote, downvote, getTags } from '../api/feed';
 import LazyLoad from 'react-lazyload';
 import { Row, Col } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 import { IPost } from '../api/model';
+import ReactTags from 'react-tag-autocomplete'
 interface IState {
     posts : IPost[],
     upvoteInfo: IUpvoteInfo,
     hasMore: boolean,
     page : number,
-    pageSize : number
+    pageSize : number,
+    filterTags: {
+      id:number,
+      name:string
+    }[],
+    sugestions:{
+      id:number,
+      name:string
+    }[]
 }
 
 const InfiniteScrollFix : React.ComponentType<InfiniteScroll.InfiniteScrollProps & {className?:string}> = InfiniteScroll as any
@@ -31,21 +41,41 @@ class Feed extends Component<{},IState> {
       },
       page: 0,
       pageSize: 10,
-      hasMore: true
+      hasMore: true,
+      filterTags:[],
+      sugestions:[]
     }
+    getTags().then((tags) => tags.map(tag => ({
+      id:tag.id as number,
+      name:tag.value
+    }))).then(sugestions => this.setState({sugestions}))
   }
   
   next(){
-    getPosts(this.state.page,this.state.pageSize).then(({hasMore,newPosts}) => {
-      const newLength = this.state.posts.length + newPosts.length
-      this.setState(({posts,page}) => ({posts:[...posts,...newPosts],hasMore,page:page+1}))
-      if(newLength*this.height < window.innerHeight && hasMore){
-        this.next()
-      }
-    },
-    (error) => {
-      
-    })
+    if(this.state.filterTags.length > 0){
+      getPosts(this.state.page,this.state.pageSize,this.state.filterTags.map(t => t.name)).then(({hasMore,newPosts}) => {
+        const newLength = this.state.posts.length + newPosts.length
+        this.setState(({posts,page}) => ({posts:[...posts,...newPosts],hasMore,page:page+1}))
+        if(newLength*this.height < window.innerHeight && hasMore){
+          this.next()
+        }
+      },
+      (error) => {
+        
+      })
+    }else{
+      getPosts(this.state.page,this.state.pageSize).then(({hasMore,newPosts}) => {
+        const newLength = this.state.posts.length + newPosts.length
+        this.setState(({posts,page}) => ({posts:[...posts,...newPosts],hasMore,page:page+1}))
+        if(newLength*this.height < window.innerHeight && hasMore){
+          this.next()
+        }
+      },
+      (error) => {
+        
+      })
+    }
+   
   }
     
   componentDidMount() {
@@ -56,22 +86,51 @@ class Feed extends Component<{},IState> {
 
   render() {
     return (
-    
-      <InfiniteScrollFix
-        dataLength={this.state.posts.length}
-        hasMore={this.state.hasMore}
-        next={this.next}
-        loader={<h4>Loading...</h4>}
-        style={{width:"100%"}}
-        className={"container"}
-        endMessage={<h4>All done.</h4>}
-      >
-        {this.state.posts.map(post => <Row key={`row${post.id}`}>
-        <Col xs="12" lg={{size:"6",offset:"3"}}>
-          <this.Post post={post} key={`post${post.id}`}/>
+      <Row>
+        <Col>
+        <Row>
+          <Col>
+          <ReactTags
+            tags={this.state.filterTags}
+            suggestions={this.state.sugestions}
+            handleDelete={(i) => {
+              this.setState(prevState => {
+                prevState.filterTags.splice(i, 1)
+                return {filterTags:prevState.filterTags,posts:[],page:0}
+              },() => {
+                this.next()
+              })
+            }}
+            handleAddition={(tag) =>{
+              
+              this.setState(prevState => {
+                const filterTags = [...prevState.filterTags,tag]
+                return {filterTags,posts:[],page:0}
+              },() => {
+                this.next()
+              })
+            }}
+          />
+          </Col>
+        </Row>
+          
+          <InfiniteScrollFix
+            dataLength={this.state.posts.length}
+            hasMore={this.state.hasMore}
+            next={this.next}
+            loader={<h4>Loading...</h4>}
+            style={{width:"100%"}}
+            className={"container"}
+            endMessage={<h4>All done.</h4>}
+          >
+            {this.state.posts.map(post => <Row key={`row${post.id}`}>
+            <Col xs="12" lg={{size:"6",offset:"3"}}>
+              <this.Post post={post} key={`post${post.id}`}/>
+            </Col>
+            </Row>)}
+          </InfiniteScrollFix>
         </Col>
-        </Row>)}
-      </InfiniteScrollFix>
+      </Row>
     );
   }
   Post : StatelessComponent<{post:IPost}> = (props) => 

@@ -7,6 +7,14 @@ import Tag from '../models/tables/tag';
 import Vote, { IVote } from '../models/tables/vote';
 import { Sequelize } from 'sequelize-typescript';
 import { IPost } from '../models/responses/IFeedResponse';
+import * as request from 'request-promise-native'
+import {promisify} from 'util'
+import {createReadStream} from 'fs'
+import * as FormData from 'form-data'
+import fetch from 'node-fetch'
+import { picpurify } from '../config'
+import { Duplex } from 'stream';
+import {arrayBufferToBlob} from 'blob-util'
 
 @Route('image')
 export class ImageController {
@@ -80,7 +88,7 @@ export class ImageController {
             id: `${p.id}`,
             pictureID: `img${p.id}`,
             votes: (p.votes) ? p.votes.map(v => v.value as number).reduce((a, b) => a + b, 0) : 0,
-            nsfwTags: [],
+            nsfwTags: p.nsfwTags.split(','),
             tags: (p.tags) ? p.tags.map(t => t.value) : []
         }
     }
@@ -98,8 +106,8 @@ export class ImageController {
 
     @Post('uploadFile')
     @Security('JWT')
-    public async uploadFile(@Request() request: express.Request, @Body() { tags }: IImageParams, ): Promise<IPost> {
-        await this.handleFile(request);
+    public async uploadFile(@Request() req: express.Request, @Body() { tags }: IImageParams, ): Promise<IPost> {
+        await this.handleFile(req);
         const tagIds: Tag[] = []
         for (const value of tags.slice(1)) {
             try {
@@ -119,7 +127,35 @@ export class ImageController {
         }
 
         const p = new Picture()
-        p.data = request.files[0].buffer
+        p.data = req.files[0].buffer
+        var imagePath = '/path/to/local/file.jpg'
+        let nsfwTags : string[] = []
+        try{
+            const formData = new FormData()
+            formData.append('file_image',p.data,{
+                knownLength:req.files[0].size,
+                contentType:req.files[0].mimetype,
+                filename:'image.jpg'
+            })
+            formData.append('API_KEY',picpurify.api_key)
+            formData.append('task',"porn_detection,drug_detection,gore_detection")
+            formData.append('origin_id','xxxxxx')
+            formData.append('reference_id','xxxxxx')
+            //const body = await request.post({ url: picpurify.url, formData , json:true });
+            const body = await fetch(picpurify.url,{method:"POST",body: formData as any}).then(res => res.json())
+            console.log(body)
+            if(body.status === "success"){
+                for(let tag of ['porn','drug','gore']){
+                    if(body[`${tag}_detection`][`${tag}_content`]){
+                        nsfwTags.push(tag)
+                    }
+                }
+            }
+        }catch(e){
+            console.log(e)
+        }
+        //
+        p.nsfwTags = nsfwTags.join(',')
         const psaved = await p.save()
         await psaved.$set('votes', [])
         await psaved.$add('tag', tagIds)
@@ -128,7 +164,7 @@ export class ImageController {
             id: `${psaved.id}`,
             pictureID: `img${psaved.id}`,
             votes: (psaved.votes) ? psaved.votes.map(v => v.value as number).reduce((a, b) => a + b, 0) : 0,
-            nsfwTags: [],
+            nsfwTags:psaved.nsfwTags.split(','),
             tags: (psaved.tags) ? psaved.tags.map(t => t.value) : []
         }
     }
@@ -143,5 +179,12 @@ export class ImageController {
                 resolve();
             });
         });
+    }
+
+    private bufferToStream(b : Buffer){
+        const s = new Duplex();
+        s.push(b)
+        s.push(null)
+        return s
     }
 }

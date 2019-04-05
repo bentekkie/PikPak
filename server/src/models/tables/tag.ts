@@ -3,7 +3,7 @@ import Picture, { IPicture } from './picture';
 import PictureTag from './picturetag';
 
 export interface ITag {
-    _id?: number
+    id?: number
     value: String,
     pictures?: IPicture[]
 }

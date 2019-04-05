@@ -40,6 +40,41 @@ const models: TsoaRoute.Models = {
             "password": { "dataType": "string", "required": true },
         },
     },
+    "ITag": {
+        "properties": {
+            "id": { "dataType": "double" },
+            "value": { "dataType": "string", "required": true },
+            "pictures": { "dataType": "array", "array": { "ref": "IPicture" } },
+        },
+    },
+    "IPicture": {
+        "properties": {
+            "id": { "dataType": "double" },
+            "creationDate": { "dataType": "datetime", "required": true },
+            "tags": { "dataType": "array", "array": { "ref": "ITag" } },
+            "votes": { "dataType": "array", "array": { "ref": "IVote" }, "required": true },
+            "data": { "dataType": "buffer", "required": true },
+            "nsfwTags": { "dataType": "string", "required": true },
+        },
+    },
+    "IUser": {
+        "properties": {
+            "username": { "dataType": "string", "required": true },
+            "password": { "dataType": "string" },
+            "id": { "dataType": "double" },
+        },
+    },
+    "IVote": {
+        "properties": {
+            "id": { "dataType": "double" },
+            "up": { "dataType": "boolean", "required": true },
+            "picture": { "ref": "IPicture", "required": true },
+            "value": { "dataType": "double", "required": true },
+            "pictureId": { "dataType": "double", "required": true },
+            "user": { "ref": "IUser", "required": true },
+            "userId": { "dataType": "double", "required": true },
+        },
+    },
     "IPost": {
         "properties": {
             "id": { "dataType": "string", "required": true },
@@ -61,40 +96,6 @@ const models: TsoaRoute.Models = {
             "page": { "dataType": "double", "required": true },
             "pageSize": { "dataType": "double", "required": true },
             "tags": { "dataType": "array", "array": { "dataType": "string" } },
-        },
-    },
-    "IPicture": {
-        "properties": {
-            "id": { "dataType": "double" },
-            "creationDate": { "dataType": "datetime", "required": true },
-            "tags": { "dataType": "array", "array": { "ref": "ITag" } },
-            "votes": { "dataType": "array", "array": { "ref": "IVote" }, "required": true },
-            "data": { "dataType": "buffer", "required": true },
-        },
-    },
-    "ITag": {
-        "properties": {
-            "_id": { "dataType": "double" },
-            "value": { "dataType": "string", "required": true },
-            "pictures": { "dataType": "array", "array": { "ref": "IPicture" } },
-        },
-    },
-    "IVote": {
-        "properties": {
-            "id": { "dataType": "double" },
-            "up": { "dataType": "boolean", "required": true },
-            "picture": { "ref": "IPicture", "required": true },
-            "value": { "dataType": "double", "required": true },
-            "pictureId": { "dataType": "double", "required": true },
-            "user": { "ref": "IUser", "required": true },
-            "userId": { "dataType": "double", "required": true },
-        },
-    },
-    "IUser": {
-        "properties": {
-            "username": { "dataType": "string", "required": true },
-            "password": { "dataType": "string" },
-            "id": { "dataType": "double" },
         },
     },
     "IImageParams": {
@@ -162,6 +163,24 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.currentUser.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.get('/api/feed/tags',
+        function(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new FeedController();
+
+
+            const promise = controller.getTags.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     app.post('/api/feed',
@@ -267,7 +286,7 @@ export function RegisterRoutes(app: express.Express) {
         authenticateMiddleware([{ "JWT": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
-                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
                 undefined: { "in": "body", "required": true, "ref": "IImageParams" },
             };
 

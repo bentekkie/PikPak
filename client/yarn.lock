@@ -8176,6 +8176,11 @@ react-scripts@2.1.5:
   optionalDependencies:
     fsevents "1.2.4"
 
+react-tag-autocomplete@^5.9.0:
+  version "5.9.0"
+  resolved "https://registry.yarnpkg.com/react-tag-autocomplete/-/react-tag-autocomplete-5.9.0.tgz#413303ea6f4c5c66430ecc936ef7ae6f157a934e"
+  integrity sha512-u8d/V+vjlI0riO0mVI+F0GjTx75dck6gCmCJww/2QaRB2GqeY+fohwNohdkifkLeTQR3K8EGdkRe8+m1QseSiw==
+
 react-transition-group@^2.3.1:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.6.0.tgz#3c41cbdd9c044c5f8604d4e8d319e860919c9fae"

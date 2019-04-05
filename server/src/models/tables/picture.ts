@@ -9,7 +9,8 @@ export interface IPicture {
     creationDate: Date;
     tags?: ITag[];
     votes: IVote[]
-    data: Buffer
+    data: Buffer,
+    nsfwTags: string
 }
 
 @Table
@@ -25,4 +26,7 @@ export default class Picture extends Model<Picture> implements IPicture {
 
     @Column
     data: Buffer
+
+    @Column
+    nsfwTags: string
 }

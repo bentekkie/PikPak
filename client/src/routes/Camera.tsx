@@ -1,4 +1,5 @@
 import React, { Component, ChangeEvent } from 'react';
+import './Camera.css'
 import { Container, Form, Input, FormGroup, Label, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { IUserResponse } from '../api/model';
 import { uploadImage } from '../api/feed';
@@ -91,9 +92,9 @@ class Camera extends Component<IProps,IState> {
           height={720}
           {...{videoConstraints,imageSmoothing:true,}}
         />,
-        <Button key="swap" onClick={() => this.setState(({facingMode}) => ({facingMode:(facingMode === "user")?"environment":"user"}))}><FontAwesomeIcon icon={faSync}/></Button>,
+        <Button key="swap" className="camButton" onClick={() => this.setState(({facingMode}) => ({facingMode:(facingMode === "user")?"environment":"user"}))}><FontAwesomeIcon icon={faSync}/></Button>,
         ' ',
-        <Button key="capture" onClick={this.capture}><FontAwesomeIcon icon={faCamera}/></Button>]}
+        <Button key="capture" className="camButton" onClick={this.capture}><FontAwesomeIcon icon={faCamera}/></Button>]}
       </div>
     );
   }

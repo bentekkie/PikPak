@@ -25,6 +25,37 @@ export type INewUserParams = {
 'password'?: string
 }
 
+export type ITag = {
+'id'?: number
+'value': string
+'pictures'?: Array<IPicture>
+}
+
+export type IPicture = {
+'id'?: number
+'creationDate': string
+'tags'?: Array<ITag>
+'votes'?: Array<IVote>
+'data'?: string
+'nsfwTags'?: string
+}
+
+export type IUser = {
+'username': string
+'password'?: string
+'id'?: number
+}
+
+export type IVote = {
+'id'?: number
+'up': boolean
+'picture'?: IPicture
+'value'?: number
+'pictureId'?: number
+'user'?: IUser
+'userId'?: number
+}
+
 export type IPost = {
 'id': string
 'pictureID'?: string
@@ -43,36 +74,6 @@ export type IFeedRequestBody = {
 'page': number
 'pageSize'?: number
 'tags'?: Array<string>
-}
-
-export type IPicture = {
-'id'?: number
-'creationDate': string
-'tags'?: Array<ITag>
-'votes'?: Array<IVote>
-'data'?: string
-}
-
-export type ITag = {
-'_id'?: number
-'value': string
-'pictures'?: Array<IPicture>
-}
-
-export type IVote = {
-'id'?: number
-'up': boolean
-'picture'?: IPicture
-'value'?: number
-'pictureId'?: number
-'user'?: IUser
-'userId'?: number
-}
-
-export type IUser = {
-'username': string
-'password'?: string
-'id'?: number
 }
 
 export type IImageParams = {

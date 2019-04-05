@@ -87,6 +87,128 @@
 			],
 			"type": "object"
 		},
+		"ITag": {
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double",
+					"x-nullable": true
+				},
+				"value": {
+					"type": "string"
+				},
+				"pictures": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/IPicture"
+					},
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"value"
+			],
+			"type": "object"
+		},
+		"IPicture": {
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double",
+					"x-nullable": true
+				},
+				"creationDate": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"tags": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ITag"
+					},
+					"x-nullable": true
+				},
+				"votes": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/IVote"
+					}
+				},
+				"data": {
+					"type": "string",
+					"format": "byte"
+				},
+				"nsfwTags": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"creationDate",
+				"votes",
+				"data",
+				"nsfwTags"
+			],
+			"type": "object"
+		},
+		"IUser": {
+			"properties": {
+				"username": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string",
+					"x-nullable": true
+				},
+				"id": {
+					"type": "number",
+					"format": "double",
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"username"
+			],
+			"type": "object"
+		},
+		"IVote": {
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double",
+					"x-nullable": true
+				},
+				"up": {
+					"type": "boolean"
+				},
+				"picture": {
+					"$ref": "#/definitions/IPicture"
+				},
+				"value": {
+					"type": "number",
+					"format": "double"
+				},
+				"pictureId": {
+					"type": "number",
+					"format": "double"
+				},
+				"user": {
+					"$ref": "#/definitions/IUser"
+				},
+				"userId": {
+					"type": "number",
+					"format": "double"
+				}
+			},
+			"required": [
+				"up",
+				"picture",
+				"value",
+				"pictureId",
+				"user",
+				"userId"
+			],
+			"type": "object"
+		},
 		"IPost": {
 			"properties": {
 				"id": {
@@ -166,124 +288,6 @@
 			"required": [
 				"page",
 				"pageSize"
-			],
-			"type": "object"
-		},
-		"IPicture": {
-			"properties": {
-				"id": {
-					"type": "number",
-					"format": "double",
-					"x-nullable": true
-				},
-				"creationDate": {
-					"type": "string",
-					"format": "date-time"
-				},
-				"tags": {
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/ITag"
-					},
-					"x-nullable": true
-				},
-				"votes": {
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/IVote"
-					}
-				},
-				"data": {
-					"type": "string",
-					"format": "byte"
-				}
-			},
-			"required": [
-				"creationDate",
-				"votes",
-				"data"
-			],
-			"type": "object"
-		},
-		"ITag": {
-			"properties": {
-				"_id": {
-					"type": "number",
-					"format": "double",
-					"x-nullable": true
-				},
-				"value": {
-					"type": "string"
-				},
-				"pictures": {
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/IPicture"
-					},
-					"x-nullable": true
-				}
-			},
-			"required": [
-				"value"
-			],
-			"type": "object"
-		},
-		"IVote": {
-			"properties": {
-				"id": {
-					"type": "number",
-					"format": "double",
-					"x-nullable": true
-				},
-				"up": {
-					"type": "boolean"
-				},
-				"picture": {
-					"$ref": "#/definitions/IPicture"
-				},
-				"value": {
-					"type": "number",
-					"format": "double"
-				},
-				"pictureId": {
-					"type": "number",
-					"format": "double"
-				},
-				"user": {
-					"$ref": "#/definitions/IUser"
-				},
-				"userId": {
-					"type": "number",
-					"format": "double"
-				}
-			},
-			"required": [
-				"up",
-				"picture",
-				"value",
-				"pictureId",
-				"user",
-				"userId"
-			],
-			"type": "object"
-		},
-		"IUser": {
-			"properties": {
-				"username": {
-					"type": "string"
-				},
-				"password": {
-					"type": "string",
-					"x-nullable": true
-				},
-				"id": {
-					"type": "number",
-					"format": "double",
-					"x-nullable": true
-				}
-			},
-			"required": [
-				"username"
 			],
 			"type": "object"
 		},
@@ -414,6 +418,27 @@
 						"JWT": []
 					}
 				],
+				"parameters": []
+			}
+		},
+		"/feed/tags": {
+			"get": {
+				"operationId": "GetTags",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/ITag"
+							}
+						}
+					}
+				},
+				"security": [],
 				"parameters": []
 			}
 		},

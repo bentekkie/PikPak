@@ -1,0 +1,8 @@
+.camButton{
+    margin-top: 0px;
+    z-index: 99999999;
+}
+
+.cam{
+    z-index: 1;
+}
