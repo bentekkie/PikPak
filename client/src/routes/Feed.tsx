@@ -10,16 +10,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 import { IPost } from '../api/model';
 import ReactTags from 'react-tag-autocomplete'
+import TagsInput from 'react-tagsinput'
+import 'react-tagsinput/react-tagsinput.css'
+import { generateAutocompleteRenderInput } from '../api/utils';
+
 interface IState {
     posts : IPost[],
     upvoteInfo: IUpvoteInfo,
     hasMore: boolean,
     page : number,
     pageSize : number,
-    filterTags: {
-      id:number,
-      name:string
-    }[],
+    filterTags: string[],
     sugestions:{
       id:number,
       name:string
@@ -53,7 +54,7 @@ class Feed extends Component<{},IState> {
   
   next(){
     if(this.state.filterTags.length > 0){
-      getPosts(this.state.page,this.state.pageSize,this.state.filterTags.map(t => t.name)).then(({hasMore,newPosts}) => {
+      getPosts(this.state.page,this.state.pageSize,this.state.filterTags).then(({hasMore,newPosts}) => {
         const newLength = this.state.posts.length + newPosts.length
         this.setState(({posts,page}) => ({posts:[...posts,...newPosts],hasMore,page:page+1}))
         if(newLength*this.height < window.innerHeight && hasMore){
@@ -88,31 +89,24 @@ class Feed extends Component<{},IState> {
     return (
       <Row>
         <Col>
-        <Row>
+        
           <Col>
-          <ReactTags
-            tags={this.state.filterTags}
-            suggestions={this.state.sugestions}
-            handleDelete={(i) => {
-              this.setState(prevState => {
-                prevState.filterTags.splice(i, 1)
-                return {filterTags:prevState.filterTags,posts:[],page:0}
-              },() => {
-                this.next()
-              })
-            }}
-            handleAddition={(tag) =>{
-              
-              this.setState(prevState => {
-                const filterTags = [...prevState.filterTags,tag]
-                return {filterTags,posts:[],page:0}
-              },() => {
-                this.next()
-              })
-            }}
+          <TagsInput
+          value={this.state.filterTags}
+          onChange={filterTags=>{
+            this.setState({filterTags},() => {
+              this.setState({
+                posts:[],
+                page:0
+              },() => this.next())
+
+            })
+          }}
+          renderInput={generateAutocompleteRenderInput(this.state.sugestions)}
           />
+
           </Col>
-        </Row>
+        
           
           <InfiniteScrollFix
             dataLength={this.state.posts.length}

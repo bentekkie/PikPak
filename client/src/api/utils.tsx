@@ -1,13 +1,17 @@
+import React from 'react'
+
+import Autosuggest from 'react-autosuggest'
+
 export function postData(url = ``, data = {}) {
     // Default options are marked with *
     const token = sessionStorage.getItem('authToken')
-    let headers : {} = {
+    let headers: {} = {
         "Content-Type": "application/json"
     }
-    if(token){
+    if (token) {
         headers = {
             ...headers,
-            authorization:token
+            authorization: token
         }
     }
     return fetch(url, {
@@ -21,20 +25,20 @@ export function postData(url = ``, data = {}) {
         body: JSON.stringify(data), // body data type must match "Content-Type" header
     })
         .then(response => response.json()).then(resp => {
-            if(resp.status){
+            if (resp.status) {
                 throw resp
             }
             return resp
         }); // parses JSON response into native Javascript objects 
 }
 
-export async function postForm(url = ``, data : FormData){
+export async function postForm(url = ``, data: FormData) {
     // Default options are marked with *
     const token = sessionStorage.getItem('authToken')
-    let headers : {} = {}
-    if(token){
+    let headers: {} = {}
+    if (token) {
         headers = {
-            authorization:token
+            authorization: token
         }
     }
     return fetch(url, {
@@ -48,7 +52,7 @@ export async function postForm(url = ``, data : FormData){
         body: data, // body data type must match "Content-Type" header
     })
         .then(response => response.json()).then(resp => {
-            if(resp.status){
+            if (resp.status) {
                 throw resp
             }
             return resp
@@ -58,23 +62,23 @@ export async function postForm(url = ``, data : FormData){
 export async function fetchData(url = ``) {
     // Default options are marked with *
     const token = sessionStorage.getItem('authToken')
-    let headers : {} = {}
-    if(token){
+    let headers: {} = {}
+    if (token) {
         headers = {
             ...headers,
-            authorization:token
+            authorization: token
         }
     }
-    return fetch(url, {headers})
+    return fetch(url, { headers })
         .then(response => response.json()).then(resp => {
-            if(resp.status){
+            if (resp.status) {
                 throw resp
             }
             return resp
         })
 }
 
-export function dataURItoBlob(dataURI : string) {
+export function dataURItoBlob(dataURI: string) {
     // convert base64 to raw binary data held in a string
     // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
     var byteString = atob(dataURI.split(',')[1]);
@@ -96,7 +100,44 @@ export function dataURItoBlob(dataURI : string) {
     //return bb.getBlob(mimeString);
 
     //New Code
-    return new Blob([ab], {type: mimeString});
+    return new Blob([ab], { type: mimeString });
 
 
+}
+
+export function generateAutocompleteRenderInput(allSuggestions: {
+    id: number,
+    name: string
+}[]) {
+    return ({ addTag, ...props }) => {
+        const handleOnChange = (e, { newValue, method }) => {
+            if (method === 'enter') {
+                e.preventDefault()
+            } else {
+                props.onChange(e)
+            }
+        }
+
+        const inputValue = (props.value && props.value.trim().toLowerCase()) || ''
+        const inputLength = inputValue.length
+
+        let suggestions = allSuggestions.filter((state) => {
+            return state.name.toLowerCase().slice(0, inputLength) === inputValue
+        })
+        return (
+            <Autosuggest
+                ref={props.ref}
+                suggestions={suggestions}
+                shouldRenderSuggestions={(value) => value && value.trim().length > 0}
+                getSuggestionValue={(suggestion) => suggestion.name}
+                renderSuggestion={(suggestion) => <div>{suggestion.name}</div>}
+                inputProps={{ ...props, onChange: handleOnChange, value:inputValue }}
+                onSuggestionSelected={(e, { suggestion }) => {
+                    addTag(suggestion.name)
+                }}
+                onSuggestionsClearRequested={() => { }}
+                onSuggestionsFetchRequested={() => { }}
+            />
+        )
+    }
 }
