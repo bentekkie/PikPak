@@ -168,7 +168,7 @@ class App extends Component<{}, IState> {
           </Modal>
 
           <Modal isOpen={this.state.registerOpen} toggle={this.toggleRegister} centered>
-            <ModalHeader toggle={this.toggleRegister}>Login</ModalHeader>
+            <ModalHeader toggle={this.toggleRegister}>Register</ModalHeader>
             <ModalBody>
               <Form>
                 <Input name="registerusername" type="text" placeholder="username" onChange={this.handleChangeUsernameRegister} value={this.state.registerusername} />
