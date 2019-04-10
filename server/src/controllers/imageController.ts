@@ -15,6 +15,7 @@ import fetch from 'node-fetch'
 import { picpurify } from '../config'
 import { Duplex } from 'stream';
 import {arrayBufferToBlob} from 'blob-util'
+import { parseCoords } from '../common/utils';
 
 @Route('image')
 export class ImageController {
@@ -63,7 +64,11 @@ export class ImageController {
                 pictureID: `img${p.id}`,
                 votes: (p.votes) ? p.votes.map(v => v.value as number).reduce((a, b) => a + b, 0) : 0,
                 nsfwTags: [],
-                tags: (p.tags) ? p.tags.map(t => t.value) : []
+                tags: (p.tags) ? p.tags.map(t => t.value) : [],
+                coordinates:{
+                    lat:p.lat,
+                    lon:p.lon
+                }
             }
         }
         const v = new Vote({
@@ -89,7 +94,11 @@ export class ImageController {
             pictureID: `img${p.id}`,
             votes: (p.votes) ? p.votes.map(v => v.value as number).reduce((a, b) => a + b, 0) : 0,
             nsfwTags: p.nsfwTags.split(','),
-            tags: (p.tags) ? p.tags.map(t => t.value) : []
+            tags: (p.tags) ? p.tags.map(t => t.value) : [],
+            coordinates:{
+                lat:p.lat,
+                lon:p.lon
+            }
         }
     }
 
@@ -106,9 +115,10 @@ export class ImageController {
 
     @Post('uploadFile')
     @Security('JWT')
-    public async uploadFile(@Request() req: express.Request, @Body() { tags }: IImageParams, ): Promise<IPost> {
+    public async uploadFile(@Request() req: express.Request, @Body() { tags,coords }: IImageParams, ): Promise<IPost> {
         await this.handleFile(req);
         const tagIds: Tag[] = []
+        console.log(`${coords}`)
         for (const value of tags.slice(1)) {
             try {
                 tagIds.push((await Tag.findOrCreate({
@@ -155,8 +165,13 @@ export class ImageController {
             console.log(e)
         }
         //
+        let coordsObj : Coordinates = JSON.parse(coords)
+        
+        p.lat = coordsObj.latitude
+        p.lon = coordsObj.longitude
         p.nsfwTags = nsfwTags.join(',')
-        const psaved = await p.save()
+        try{
+            const psaved = await p.save()
         await psaved.$set('votes', [])
         await psaved.$add('tag', tagIds)
         // file will be in request.randomFileIsHere, it is a buffer
@@ -165,8 +180,17 @@ export class ImageController {
             pictureID: `img${psaved.id}`,
             votes: (psaved.votes) ? psaved.votes.map(v => v.value as number).reduce((a, b) => a + b, 0) : 0,
             nsfwTags:psaved.nsfwTags.split(','),
-            tags: (psaved.tags) ? psaved.tags.map(t => t.value) : []
+            tags: (psaved.tags) ? psaved.tags.map(t => t.value) : [],
+            coordinates:{
+                lat:psaved.lat,
+                lon:psaved.lon
+            }
         }
+        }catch(e){
+            console.log(e)
+            throw e
+        }
+        
     }
 
     private handleFile(request: express.Request): Promise<any> {

@@ -183,10 +183,10 @@
     "@types/lodash" "*"
     "@types/validator" "*"
 
-"@types/sequelize@^4.27.41":
-  version "4.27.41"
-  resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.27.41.tgz#28190fb72f48a9a5d713d583b917110a623a522d"
-  integrity sha512-B5iJA4L3pfs3w1GbSdwVRHnWeNZ8Mu0Jg4wU6iPhJD1HcG/5/9hD4khxM/8ikINEZiiN0Js2NqVv9BlhDih9NA==
+"@types/sequelize@^4.27.46":
+  version "4.27.46"
+  resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.27.46.tgz#f4bc7aafa45f264837200364b31172ad8aff4a33"
+  integrity sha512-hqosowwLJsLrR+A8IOVgGQaToaBAZE54WLJmjxARaoHC4hl4lmfzXPNY/JGn3hmxNIhb6klHs7skQ2uJPrlXSA==
   dependencies:
     "@types/bluebird" "*"
     "@types/continuation-local-storage" "*"
@@ -200,6 +200,20 @@
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
+
+"@types/spatialite@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@types/spatialite/-/spatialite-0.0.3.tgz#de89ae62b8a7f7e6d080f4ae4a07513eea71e329"
+  integrity sha512-JfepA7lHDxHodOefnF/MiPhlDIGVcVq/SQBW+TN7ECUvCMuRRnZzwXjDHt33vhuwKCeUhpnMjEAHHgW8oEBYVA==
+  dependencies:
+    "@types/sqlite3" "*"
+
+"@types/sqlite3@*":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@types/sqlite3/-/sqlite3-3.1.5.tgz#c9bbc94b8e8ed0654e1f8bc98716aba6030e9533"
+  integrity sha512-upsrd1zEYMa4Y+prurQ+vpo5SN63BUF6tOjeTv3ziF+9W9PHVh4/S5cy0qAqkHvmOEm/AZhEKd7V/0bR2udmFw==
+  dependencies:
+    "@types/node" "*"
 
 "@types/swagger-ui-express@^3.0.0":
   version "3.0.0"
@@ -2827,6 +2841,13 @@ source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
+spatialite@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/spatialite/-/spatialite-0.1.0.tgz#62fb49568baf961d0e0dfcffa71474cadef09ccd"
+  integrity sha512-msiD3jS4q2Hdal3LygSAHnPWeudZVkd/0aQY0Psj26D3dKsUp9/ArduS4JbXBj5Qo7LtlJrZfvFQKHhIhxZ65w==
+  dependencies:
+    sqlite3 "*"
+
 spdx-correct@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/spdx-correct/-/spdx-correct-3.1.0.tgz#fb83e504445268f154b074e218c87c003cd31df4"
@@ -2865,7 +2886,7 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-sqlite3@^4.0.6:
+sqlite3@*, sqlite3@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.0.6.tgz#e587b583b5acc6cb38d4437dedb2572359c080ad"
   integrity sha512-EqBXxHdKiwvNMRCgml86VTL5TK1i0IKiumnfxykX0gh6H6jaKijAXvE9O1N7+omfNSawR2fOmIyJZcfe8HYWpw==

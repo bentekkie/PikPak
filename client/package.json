@@ -25,6 +25,7 @@
     "react-dom": "^16.8.3",
     "react-infinite-scroll-component": "^4.5.1",
     "react-lazyload": "^2.5.0",
+    "react-loading-overlay": "^1.0.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.5",
     "react-tag-autocomplete": "^5.9.0",

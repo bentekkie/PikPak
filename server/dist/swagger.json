@@ -149,13 +149,17 @@
 				},
 				"nsfwTags": {
 					"type": "string"
+				},
+				"location": {
+					"type": "object"
 				}
 			},
 			"required": [
 				"creationDate",
 				"votes",
 				"data",
-				"nsfwTags"
+				"nsfwTags",
+				"location"
 			],
 			"type": "object"
 		},
@@ -245,6 +249,9 @@
 				"votes": {
 					"type": "number",
 					"format": "double"
+				},
+				"coordinates": {
+					"type": "object"
 				}
 			},
 			"required": [
@@ -252,7 +259,8 @@
 				"pictureID",
 				"nsfwTags",
 				"tags",
-				"votes"
+				"votes",
+				"coordinates"
 			],
 			"type": "object"
 		},
@@ -280,6 +288,23 @@
 			],
 			"type": "object"
 		},
+		"ILocationInfo": {
+			"properties": {
+				"lat": {
+					"type": "number",
+					"format": "double"
+				},
+				"lon": {
+					"type": "number",
+					"format": "double"
+				}
+			},
+			"required": [
+				"lat",
+				"lon"
+			],
+			"type": "object"
+		},
 		"IFeedRequestBody": {
 			"properties": {
 				"page": {
@@ -289,6 +314,9 @@
 				"pageSize": {
 					"type": "number",
 					"format": "double"
+				},
+				"location": {
+					"$ref": "#/definitions/ILocationInfo"
 				},
 				"tags": {
 					"type": "array",
@@ -300,7 +328,8 @@
 			},
 			"required": [
 				"page",
-				"pageSize"
+				"pageSize",
+				"location"
 			],
 			"type": "object"
 		},
@@ -311,10 +340,14 @@
 					"items": {
 						"type": "string"
 					}
+				},
+				"coords": {
+					"type": "string"
 				}
 			},
 			"required": [
-				"tags"
+				"tags",
+				"coords"
 			],
 			"type": "object"
 		}

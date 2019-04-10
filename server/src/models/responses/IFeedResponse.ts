@@ -11,5 +11,9 @@ export interface IPost{
     pictureID:string,
     nsfwTags:string[],
     tags:string[],
-    votes:number
+    votes:number,
+    coordinates:{
+        lon:number,
+        lat:number
+    }
 }

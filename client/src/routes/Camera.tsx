@@ -6,9 +6,10 @@ import { uploadImage } from '../api/feed';
 import { Redirect } from 'react-router';
 import Webcam from "react-webcam";
 import '../styles/Camera.css'
-import { dataURItoBlob } from '../api/utils';
+import { dataURItoBlob, getLocation } from '../api/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync, faCamera } from '@fortawesome/free-solid-svg-icons';
+import LoadingOverlay from 'react-loading-overlay';
 
 interface IProps {
   user:IUserResponse
@@ -21,6 +22,8 @@ interface IState {
   height: number,
   confirmOpen: boolean
   facingMode: "user" | "environment"
+  currentLocation: Coordinates | null
+  isUploading: boolean
 }
 
 
@@ -35,10 +38,13 @@ class Camera extends Component<IProps,IState> {
       width:0,
       height:0,
       confirmOpen: false,
-      facingMode:"environment"
+      facingMode:"environment",
+      currentLocation: null,
+      isUploading:false
     }
     this.capture = this.capture.bind(this)
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+    getLocation().then(position => this.setState({currentLocation:position.coords}))
   }
     
   componentDidMount() {
@@ -67,15 +73,22 @@ class Camera extends Component<IProps,IState> {
     };
 
     return (this.state.uploaded)?<Redirect to="/"/>:(
-      <div>
+      <LoadingOverlay
+        active={this.state.isUploading}
+        spinner
+        text='Uploading...'
+      >
         {(this.state.file)?[
           <img src={URL.createObjectURL(this.state.file)}/>,
           <br/>,
           <Input name="tags" type="text" placeholder="tag1 tag2 tag3..." onChange={e => this.setState({tagsStr:e.target.value})} value={this.state.tagsStr} />,
           <Button color="primary" onClick={() => {
-            uploadImage(this.state.file as Blob,(this.state.tagsStr.length > 0)?this.state.tagsStr.split(' ').map(t => t.trim()):[]).then(() => {
-              this.setState({confirmOpen:false,uploaded:true})
+            this.setState({isUploading:true},() => {
+              uploadImage(this.state.file as Blob,(this.state.tagsStr.length > 0)?this.state.tagsStr.split(' ').map(t => t.trim()):[],this.state.currentLocation).then(() => {
+                this.setState({confirmOpen:false,uploaded:true})
+              }).catch(() => this.setState({isUploading:false}))
             })
+            
           }}>Upload</Button>,
           ' ',
           <Button color="secondary" onClick={() => this.setState({file:null})}>Cancel</Button>
@@ -95,7 +108,7 @@ class Camera extends Component<IProps,IState> {
         <Button key="swap" className="camButton" onClick={() => this.setState(({facingMode}) => ({facingMode:(facingMode === "user")?"environment":"user"}))}><FontAwesomeIcon icon={faSync}/></Button>,
         ' ',
         <Button key="capture" className="camButton" onClick={this.capture}><FontAwesomeIcon icon={faCamera}/></Button>]}
-      </div>
+      </LoadingOverlay>
     );
   }
 }

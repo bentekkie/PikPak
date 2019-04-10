@@ -8,7 +8,7 @@ export async function getTags() : Promise<ITag[]>{
     return fetchData('/api/feed/tags')
 }
 
-export async function getPosts(page : number, pageSize: number,tags?: string[]) : Promise<{
+export async function getPosts(page : number, pageSize: number, coords: Coordinates,tags?: string[]) : Promise<{
     newPosts:IPost[],
     hasMore:boolean
 }>{
@@ -16,12 +16,20 @@ export async function getPosts(page : number, pageSize: number,tags?: string[]) 
         return postData('/api/feed',{
             page,
             pageSize,
-            tags
+            tags,
+            location:{
+                lat:coords.latitude,
+                lon:coords.longitude
+            }
         } as IFeedRequestBody).then((resp : IFeedResponse) => ({newPosts:resp.pictures,hasMore:resp.pictures.length === 0}))
     }else{
         return postData('/api/feed',{
             page,
             pageSize,
+            location:{
+                lat:coords.latitude,
+                lon:coords.longitude
+            }
         } as IFeedRequestBody).then((resp : IFeedResponse) => ({newPosts:resp.pictures,hasMore:resp.pictures.length === 0}))
     }
 }
@@ -42,11 +50,17 @@ export async function getUpvoteInfo() : Promise<IUpvoteInfo>{
         }))
 }
 
-export async function uploadImage(file : string | Blob, tags : string[]){
+export async function uploadImage(file : string | Blob, tags : string[],{latitude,longitude}: Coordinates){
     const data = new FormData()
 
     data.append('imageFile',file)
     data.append('tags','~empty~')
+    const tmp = {
+        latitude,
+        longitude
+    }
+    console.log(JSON.stringify(tmp))
+    data.append('coords',JSON.stringify(tmp))
     for(const tag of tags){
         data.append('tags',tag)
     }

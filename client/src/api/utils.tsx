@@ -150,3 +150,13 @@ export function isImgOk(tagStr : string, tags : string[]){
     }
     return true
 }
+
+export async function getLocation(){
+    return new Promise<Position>((resolve,reject) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(resolve,reject)
+          } else {
+            reject(new Error("Location not supported"))
+          }
+    })
+}

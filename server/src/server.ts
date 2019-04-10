@@ -17,6 +17,7 @@ import * as multer from 'multer';
 import {getSwaggerJson} from './generatesw'
 import * as tsconfig from '../tsconfig.json'
 import { src, client, serverDir } from './pathUtil';
+import  {Database} from 'spatialite'
 class Server {
     private app = express();
     private sequelize = new Sequelize({
@@ -26,10 +27,16 @@ class Server {
         password: '',
         storage: 'db.sqlite',
         modelPaths: [path.join(src,'models','tables')],
-        logging:false
+        logging:true,
+        dialectModulePath:"spatialite"
     });
     constructor() {
+       
         this.sequelize.sync().then(() => getSwaggerJson(tsconfig as any)).then((swagger) => {
+            const connections: {[name : string]: Database} = (this.sequelize as any).dialect.connectionManager.connections
+            connections['default'].spatialite((err) => {
+                console.log(err)
+            })
             authenticateUser(passport);
             this.app.use(bodyParser.json());
             this.app.use(bodyParser.urlencoded({

@@ -12,7 +12,7 @@ import { IPost, IUserResponse } from '../api/model';
 import ReactTags from 'react-tag-autocomplete'
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
-import { generateAutocompleteRenderInput } from '../api/utils';
+import { generateAutocompleteRenderInput, getLocation } from '../api/utils';
 
 import { getCurrentUser } from '../api/auth';
 import { isImgOk } from '../api/utils';
@@ -27,7 +27,8 @@ interface IState {
       id:number,
       name:string
     }[],
-    settings?: IUserResponse
+    settings?: IUserResponse,
+    currentLocation: Coordinates
 }
 
 const InfiniteScrollFix : React.ComponentType<InfiniteScroll.InfiniteScrollProps & {className?:string}> = InfiniteScroll as any
@@ -47,18 +48,21 @@ class Feed extends Component<{},IState> {
       pageSize: 10,
       hasMore: true,
       filterTags:[],
-      sugestions:[]
+      sugestions:[],
+      currentLocation: null
     }
     getTags().then((tags) => tags.map(tag => ({
       id:tag.id as number,
       name:tag.value
     }))).then(sugestions => this.setState({sugestions}))
     getCurrentUser().then(settings => this.setState({settings}))
+    this.addTag = this.addTag.bind(this);
+    this.next = this.next.bind(this);
   }
   
   next(){
     if(this.state.filterTags.length > 0){
-      getPosts(this.state.page,this.state.pageSize,this.state.filterTags).then(({hasMore,newPosts}) => {
+      getPosts(this.state.page,this.state.pageSize,this.state.currentLocation,this.state.filterTags).then(({hasMore,newPosts}) => {
         const newLength = this.state.posts.length + newPosts.length
         this.setState(({posts,page}) => ({posts:[...posts,...newPosts],hasMore,page:page+1}))
         if(newLength*this.height < window.innerHeight && hasMore){
@@ -69,7 +73,7 @@ class Feed extends Component<{},IState> {
         
       })
     }else{
-      getPosts(this.state.page,this.state.pageSize).then(({hasMore,newPosts}) => {
+      getPosts(this.state.page,this.state.pageSize,this.state.currentLocation).then(({hasMore,newPosts}) => {
         const newLength = this.state.posts.length + newPosts.length
         this.setState(({posts,page}) => ({posts:[...posts,...newPosts],hasMore,page:page+1}))
         if(newLength*this.height < window.innerHeight && hasMore){
@@ -84,8 +88,17 @@ class Feed extends Component<{},IState> {
   }
     
   componentDidMount() {
-    this.next()
+    getLocation().then(position => this.setState({currentLocation:position.coords})).then(this.next)
     getUpvoteInfo().then(upvoteInfo => this.setState({upvoteInfo}))
+  }
+
+  addTag(tag : string){
+    this.setState(({filterTags}) => ({filterTags:[...filterTags,tag]}),() => {
+      this.setState({
+        posts:[],
+        page:0
+      },() => this.next())
+    })
   }
   
 
@@ -138,7 +151,7 @@ class Feed extends Component<{},IState> {
         <img className={"col-12 p-2 "+(isImgOk((this.state.settings)?this.state.settings.nsfwtags:"",props.post.nsfwTags)?"":"blurred")} src={`/api/image/imageFile/${props.post.id}.jpeg`}/>
       </LazyLoad>
       <div>
-        {(props.post.tags)?props.post.tags.map(tag => <a key={tag} href="#" className="tag">#{tag}</a>):[]}
+        {(props.post.tags)?props.post.tags.map(tag => <a onClick={() => this.addTag(tag)} key={tag} href="#" className="tag">#{tag}</a>):[]}
         {(props.post.nsfwTags)?props.post.nsfwTags.map(tag => (tag.length > 0)?<a key={tag} href="#" className="tag">#{tag}</a>:[]):[]}
         <div className="vote row mr-2">
           <a onClick={() => upvote(props.post.id).then(post => this.setState(({posts}) => {

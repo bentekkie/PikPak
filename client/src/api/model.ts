@@ -41,6 +41,7 @@ export type IPicture = {
 'votes'?: Array<IVote>
 'data'?: string
 'nsfwTags'?: string
+'location'?: void
 }
 
 export type IUser = {
@@ -66,6 +67,7 @@ export type IPost = {
 'nsfwTags'?: Array<string>
 'tags'?: Array<string>
 'votes'?: number
+'coordinates'?: void
 }
 
 export type IFeedResponse = {
@@ -74,12 +76,19 @@ export type IFeedResponse = {
 'pageSize'?: number
 }
 
+export type ILocationInfo = {
+'lat': number
+'lon'?: number
+}
+
 export type IFeedRequestBody = {
 'page': number
 'pageSize'?: number
+'location'?: ILocationInfo
 'tags'?: Array<string>
 }
 
 export type IImageParams = {
 'tags': Array<string>
+'coords'?: string
 }

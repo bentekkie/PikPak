@@ -4,7 +4,7 @@ import PictureTag from './picturetag';
 
 export interface ITag {
     id?: number
-    value: String,
+    value: string,
     pictures?: IPicture[]
 }
 

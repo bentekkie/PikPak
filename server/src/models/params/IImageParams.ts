@@ -1,3 +1,4 @@
 export interface IImageParams{
-    tags: string[]
+    tags: string[],
+    coords: string
 }

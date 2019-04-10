@@ -1,7 +1,8 @@
-import { Table, Model, BelongsToMany, CreatedAt, Column, HasMany } from 'sequelize-typescript';
+import { Table, Model, BelongsToMany, CreatedAt, Column, HasMany, Sequelize } from 'sequelize-typescript';
 import Tag, { ITag } from './tag';
 import PictureTag  from './picturetag';
 import Vote, { IVote } from './vote';
+import { NumberLiteralType } from 'typescript';
 
 
 export interface IPicture {
@@ -10,7 +11,9 @@ export interface IPicture {
     tags?: ITag[];
     votes: IVote[]
     data: Buffer,
-    nsfwTags: string
+    nsfwTags: string,
+    lat: number,
+    lon: number
 }
 
 @Table
@@ -29,4 +32,10 @@ export default class Picture extends Model<Picture> implements IPicture {
 
     @Column
     nsfwTags: string
+
+    @Column
+    lat: number
+
+    @Column
+    lon: number
 }

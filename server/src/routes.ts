@@ -58,6 +58,7 @@ const models: TsoaRoute.Models = {
             "votes": { "dataType": "array", "array": { "ref": "IVote" }, "required": true },
             "data": { "dataType": "buffer", "required": true },
             "nsfwTags": { "dataType": "string", "required": true },
+            "location": { "dataType": "object", "required": true },
         },
     },
     "IUser": {
@@ -86,6 +87,7 @@ const models: TsoaRoute.Models = {
             "nsfwTags": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
             "tags": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
             "votes": { "dataType": "double", "required": true },
+            "coordinates": { "dataType": "any", "required": true },
         },
     },
     "IFeedResponse": {
@@ -95,16 +97,24 @@ const models: TsoaRoute.Models = {
             "pageSize": { "dataType": "double", "required": true },
         },
     },
+    "ILocationInfo": {
+        "properties": {
+            "lat": { "dataType": "double", "required": true },
+            "lon": { "dataType": "double", "required": true },
+        },
+    },
     "IFeedRequestBody": {
         "properties": {
             "page": { "dataType": "double", "required": true },
             "pageSize": { "dataType": "double", "required": true },
+            "location": { "ref": "ILocationInfo", "required": true },
             "tags": { "dataType": "array", "array": { "dataType": "string" } },
         },
     },
     "IImageParams": {
         "properties": {
             "tags": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+            "coords": { "dataType": "string", "required": true },
         },
     },
 };
