@@ -32,6 +32,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "username": { "dataType": "string", "required": true },
             "id": { "dataType": "double", "required": true },
+            "nsfwtags": { "dataType": "string", "required": true },
         },
     },
     "INewUserParams": {
@@ -39,6 +40,8 @@ const models: TsoaRoute.Models = {
             "username": { "dataType": "string", "required": true },
             "password": { "dataType": "string", "required": true },
         },
+    },
+    "PartialIUser": {
     },
     "ITag": {
         "properties": {
@@ -61,6 +64,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "username": { "dataType": "string", "required": true },
             "password": { "dataType": "string" },
+            "nsfwtags": { "dataType": "string", "required": true },
             "id": { "dataType": "double" },
         },
     },
@@ -163,6 +167,27 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.currentUser.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/api/auth/update',
+        authenticateMiddleware([{ "JWT": [] }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "request", "name": "request", "required": true, "dataType": "object" },
+                user: { "in": "body", "name": "user", "required": true, "ref": "PartialIUser" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new AuthController();
+
+
+            const promise = controller.updateUser.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     app.get('/api/feed/tags',

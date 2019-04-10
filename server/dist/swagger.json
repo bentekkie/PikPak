@@ -64,11 +64,15 @@
 				"id": {
 					"type": "number",
 					"format": "double"
+				},
+				"nsfwtags": {
+					"type": "string"
 				}
 			},
 			"required": [
 				"username",
-				"id"
+				"id",
+				"nsfwtags"
 			],
 			"type": "object"
 		},
@@ -85,6 +89,11 @@
 				"username",
 				"password"
 			],
+			"type": "object"
+		},
+		"PartialIUser": {
+			"description": "Make all properties in T optional",
+			"properties": {},
 			"type": "object"
 		},
 		"ITag": {
@@ -159,6 +168,9 @@
 					"type": "string",
 					"x-nullable": true
 				},
+				"nsfwtags": {
+					"type": "string"
+				},
 				"id": {
 					"type": "number",
 					"format": "double",
@@ -166,7 +178,8 @@
 				}
 			},
 			"required": [
-				"username"
+				"username",
+				"nsfwtags"
 			],
 			"type": "object"
 		},
@@ -419,6 +432,37 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/auth/update": {
+			"post": {
+				"operationId": "UpdateUser",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IUserResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/PartialIUser"
+						}
+					}
+				]
 			}
 		},
 		"/feed/tags": {

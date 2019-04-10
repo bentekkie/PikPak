@@ -1,4 +1,4 @@
-import { ILoginResponse, IUserResponse } from "./model";
+import { ILoginResponse, IUserResponse, IUser, INewUserParams } from "./model";
 import { postData, fetchData } from "./utils";
 import { async } from "q";
 
@@ -26,9 +26,12 @@ export async function register(username: string, password: string) : Promise<IUs
     return postData('/api/auth/register',{
         username,
         password
-    })
+    } as INewUserParams)
 }
 
+export async function updateUser(user : Partial<IUser>){
+    return postData('/api/auth/update',user)
+}
 
 export async function getCurrentUser(){
     return fetchData('api/auth')

@@ -8,12 +8,14 @@ import LazyLoad from 'react-lazyload';
 import { Row, Col } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
-import { IPost } from '../api/model';
+import { IPost, IUserResponse } from '../api/model';
 import ReactTags from 'react-tag-autocomplete'
 import TagsInput from 'react-tagsinput'
 import 'react-tagsinput/react-tagsinput.css'
 import { generateAutocompleteRenderInput } from '../api/utils';
 
+import { getCurrentUser } from '../api/auth';
+import { isImgOk } from '../api/utils';
 interface IState {
     posts : IPost[],
     upvoteInfo: IUpvoteInfo,
@@ -24,7 +26,8 @@ interface IState {
     sugestions:{
       id:number,
       name:string
-    }[]
+    }[],
+    settings?: IUserResponse
 }
 
 const InfiniteScrollFix : React.ComponentType<InfiniteScroll.InfiniteScrollProps & {className?:string}> = InfiniteScroll as any
@@ -50,6 +53,7 @@ class Feed extends Component<{},IState> {
       id:tag.id as number,
       name:tag.value
     }))).then(sugestions => this.setState({sugestions}))
+    getCurrentUser().then(settings => this.setState({settings}))
   }
   
   next(){
@@ -131,10 +135,11 @@ class Feed extends Component<{},IState> {
   <div className="post">
     <div className="postInner">
       <LazyLoad offset={this.height*2}>
-        <img className="col-12 p-2" src={`/api/image/imageFile/${props.post.id}.jpeg`}/>
+        <img className={"col-12 p-2 "+(isImgOk((this.state.settings)?this.state.settings.nsfwtags:"",props.post.nsfwTags)?"":"blurred")} src={`/api/image/imageFile/${props.post.id}.jpeg`}/>
       </LazyLoad>
       <div>
         {(props.post.tags)?props.post.tags.map(tag => <a key={tag} href="#" className="tag">#{tag}</a>):[]}
+        {(props.post.nsfwTags)?props.post.nsfwTags.map(tag => (tag.length > 0)?<a key={tag} href="#" className="tag">#{tag}</a>:[]):[]}
         <div className="vote row mr-2">
           <a onClick={() => upvote(props.post.id).then(post => this.setState(({posts}) => {
             const i = posts.findIndex(({id}) => id === post.id)

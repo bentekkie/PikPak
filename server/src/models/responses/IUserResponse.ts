@@ -1,4 +1,5 @@
 export interface IUserResponse {
     username: string,
-    id: number
+    id: number,
+    nsfwtags: string
 }

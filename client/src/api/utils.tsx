@@ -141,3 +141,12 @@ export function generateAutocompleteRenderInput(allSuggestions: {
         )
     }
 }
+
+export function isImgOk(tagStr : string, tags : string[]){
+    for(const tag of tags){
+        if(!tagStr.includes(tag)){
+            return false
+        }
+    }
+    return true
+}

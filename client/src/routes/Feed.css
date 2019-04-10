@@ -7,6 +7,11 @@
     margin-top: 15px;
 }
 
+.blurred {
+    filter: blur(50px);
+    -webkit-filter: blur(50px);
+}
+
 
 .postInner  .tag {
     padding-left: 2px;

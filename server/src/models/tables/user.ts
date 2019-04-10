@@ -5,6 +5,7 @@ import {Table, Column, Model, HasMany, Unique} from 'sequelize-typescript';
 export interface IUser {
     username: string;
     password?: string
+    nsfwtags: string
     id?: number;
 }
 
@@ -17,4 +18,7 @@ export default class User extends Model<User> implements IUser{
 
     @Column
     password: string
+
+    @Column
+    nsfwtags: string
 }

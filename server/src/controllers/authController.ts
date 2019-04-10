@@ -1,7 +1,7 @@
 import {compare, genSalt, hash} from 'bcryptjs';
 import { Route, Get, Query, Body, Response, Request, Tags, Post, Security } from 'tsoa';
 import { ILoginParams } from '../models/params/ILoginParams';
-import User from '../models/tables/user'
+import User, { IUser } from '../models/tables/user'
 import { IErrorResponse, throwError } from '../models/responses/IErrorResponse';
 import { ILoginResponse } from '../models/responses/ILoginResponse';
 import {sign} from 'jsonwebtoken';
@@ -76,15 +76,15 @@ export class AuthController {
 
         const newUser: User = new User();
         newUser.username = username;
-
+        newUser.nsfwtags = ""
         const salt = await genSalt(10);
         newUser.password = await hash(password, salt);
         try{
-            await newUser.save()
-            return {
+            return newUser.save().then(({username,id,nsfwtags}) => ({
                 username,
-                id:newUser.id
-            }
+                id:newUser.id,
+                nsfwtags: newUser.nsfwtags
+            }))
         }catch(error){
             throwError({error,message:"Validation Error"})
         }
@@ -96,10 +96,36 @@ export class AuthController {
     @Get()
     @Security('JWT')
     public async currentUser(@Request() request: any): Promise<IUserResponse> {
-        console.log(request.user)
-        return {
-            username:request.user.user.username,
-            id:request.user.user.id
+        return User.findByPk(request.user.user.id).then(({username,id,nsfwtags}) => ({
+            username,
+            id,
+            nsfwtags
+        }))
+    }
+
+    @Post('update')
+    @Security('JWT')
+    public async updateUser(@Request() request: any, @Body() user : Partial<IUser>) : Promise<IUserResponse>{
+        let dbuser = await User.findByPk(request.user.user.id)
+        console.log(user)
+        if(dbuser){
+            let update : Partial<IUser> = {}
+            if(user.nsfwtags !== undefined){
+                update.nsfwtags = user.nsfwtags
+            }
+            if(user.password !== undefined){
+                const salt = await genSalt(10)
+                update.password = await hash(user.password,salt)
+            }
+            return dbuser.update(update).then(({username,id,nsfwtags}) => ({
+                username,
+                id,
+                nsfwtags
+            }))                
+        } else {
+            throwError({
+                message:"Could not save to db"
+            })
         }
     }
 }

@@ -18,12 +18,15 @@ export type ILoginParams = {
 export type IUserResponse = {
 'username': string
 'id'?: number
+'nsfwtags'?: string
 }
 
 export type INewUserParams = {
 'username': string
 'password'?: string
 }
+
+export type PartialIUser = void
 
 export type ITag = {
 'id'?: number
@@ -43,6 +46,7 @@ export type IPicture = {
 export type IUser = {
 'username': string
 'password'?: string
+'nsfwtags'?: string
 'id'?: number
 }
 
