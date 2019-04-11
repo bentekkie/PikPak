@@ -18,6 +18,8 @@ import {getSwaggerJson} from './generatesw'
 import * as tsconfig from '../tsconfig.json'
 import { src, client, serverDir } from './pathUtil';
 import  {Database} from 'spatialite'
+import * as erd from 'sequelize-erd'
+import { writeFileSync } from 'fs';
 class Server {
     private app = express();
     private sequelize = new Sequelize({
@@ -44,7 +46,10 @@ class Server {
                 limit: '5mb',
                 parameterLimit: 5000,
             }));
+            erd({source:this.sequelize}).then(svg => {
 
+                writeFileSync('./erd.svg',svg)
+            })
             this.app.use(multer().any());
             this.app.use(passport.initialize());
             this.app.use(passport.session());

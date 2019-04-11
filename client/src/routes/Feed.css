@@ -66,7 +66,6 @@
     font-weight: 300;
     font-size: 16px;
     z-index: 99999999;
-    position: absolute;
 }
 .react-autosuggest__suggestion {
     list-style: none;

@@ -650,6 +650,11 @@ commander@^2.19.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
   integrity sha512-6tvAOO+D6OENvRAh524Dh9jcfKTYDQAqvqezbCW82xj5X0pSrcpxtvRKHLG0yBY6SD7PSDrJaj+0AiOcKVd1Xg==
 
+commander@^2.9.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
+  integrity sha512-7j2y+40w61zy6YC2iRNpUe/NwhNyoXrYpHMrSunaMG64nRnaf96zO/KMQR4OyN/UnE5KLyEBnKHd4aG3rskjpQ==
+
 commander@~2.17.1:
   version "2.17.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
@@ -2675,6 +2680,13 @@ send@0.16.2:
     on-finished "~2.3.0"
     range-parser "~1.2.0"
     statuses "~1.4.0"
+
+sequelize-erd@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/sequelize-erd/-/sequelize-erd-1.2.0.tgz#e79c7bc2b21e67cfc10268cb872170c36cac99ab"
+  integrity sha512-+/wAgCndUq1rFAWU9lkUxfHbJnqlIwfEVWuEzehyKZuvNOJ/hSdqB0PA//6+PP6iMx+kGNHuRYN3Z4GsbhAMXA==
+  dependencies:
+    commander "^2.9.0"
 
 sequelize-typescript@^0.6.7:
   version "0.6.7"
